@@ -135,7 +135,7 @@ A certificate that has a registration in the `Active` state can be renewed or re
 
 After too many failed attempts the registration becomes `Locked`. A refusal stays in the dialog with the reason, and closing the dialog after a failed attempt refreshes the **Registration** widget with the failed attempts and the `Locked` state. The issuance window applies to the first issuance only: once the registered certificate is issued, there is no deadline for renewing or rekeying it.
 
-Operations that the platform starts on its own do not know the challenge. A renewal in a location and a CMP key update outside of the registration mode present no secret, so they are refused on a challenge-protected certificate without counting an attempt. A CMP key update in the registration mode presents the challenge it was authenticated with. See [Challenge source](../../protocols/common-properties.md#challenge-source).
+Some operations that the platform starts on its own do not know the challenge. A renewal in a location and a CMP key update outside of the registration mode present no secret, so they are refused on a challenge-protected certificate without counting an attempt. A CMP key update in the registration mode presents the challenge it was authenticated with. See [Challenge source](../../protocols/common-properties.md#challenge-source).
 
 #### Registration and issuance flow
 

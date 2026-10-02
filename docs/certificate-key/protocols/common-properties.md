@@ -42,7 +42,7 @@ A request that does not match, or whose challenge is wrong, is refused with a ge
 
 ### What the platform's own operations do
 
-Operations that the platform starts on its own cannot present the challenge:
+Some operations that the platform starts on its own cannot present the challenge:
 
 - renewing a certificate in a location and a CMP key update outside of the registration mode send no secret, so they are refused on a challenge-protected certificate without counting an attempt;
 - a CMP key update in the registration mode sends the challenge it was authenticated with.

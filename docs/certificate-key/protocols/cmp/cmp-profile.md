@@ -45,7 +45,7 @@ With the challenge source `Protocol Default`, the CMP messages are protected wit
 The following restrictions apply to a profile with the challenge source `Certificate Registration`:
 - The variant must be `CMPv2`
 - The `Request Protection Method` must be `Shared Secret`, and no shared secret is configured on the profile
-- The response protection stays free: `Shared Secret` or `Signature`
+- The `Response Protection Method` can be either `Shared Secret` or `Signature`
 
 ## Request signing certificate
 

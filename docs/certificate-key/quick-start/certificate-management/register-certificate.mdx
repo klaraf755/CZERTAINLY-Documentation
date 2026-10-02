@@ -74,7 +74,7 @@ Complete the successor later with **Complete**, as for any registered certificat
 **Register** is disabled when the identity of the source cannot be replayed exactly, because a successor with a different SAN set would not match a holder that enrolls with the identity of the source. This is the case for SAN types without a textual form (`x400Address`, `ediPartyName`), for `otherName` values that are not plain text and for SAN values that contain a comma. It is also disabled until the connector's register attributes are loaded; a failed load shows an error and a retry.
 :::
 
-With the API, send `sourceCertificateUuid` in the register request, together with the identity and, optionally, the `authorizationSecret` and `expiresAt` of the successor. The source must be in the `Issued` or `Revoked` state.
+With the API, send `sourceCertificateUuid` in the register request, together with the identity and, optionally, the `authorizationSecret` of the successor and, only together with it, the `expiresAt` issuance window. The source must be in the `Issued` or `Revoked` state.
 
 ### How the relation is resolved
 
