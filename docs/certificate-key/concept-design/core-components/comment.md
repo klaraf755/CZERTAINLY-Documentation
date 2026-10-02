@@ -6,7 +6,7 @@ sidebar_position: 24
 
 A `Comment` is a message attached to an object in the platform inventory. Comments let a user raise a request, ask a question or record a decision on the object it concerns, instead of in email or chat, so the reasoning stays with the object, is attributable to its author and is recorded in the [audit log](../../logging/audit-logs.md).
 
-Comments are meant for collaboration between platform users who hold different permissions. A user who can read an object but cannot change it can still comment on it, and the user who can make the change can reply and resolve the thread in the same place.
+Comments are meant for collaboration between platform users who hold different permissions. A user who can read an object but cannot change it can still comment on it, and a user who holds the `Comment` permission, such as the one who can make the change, can reply and resolve the thread in the same place.
 
 ## Supported objects
 
@@ -102,7 +102,7 @@ Comments are displayed in a restricted subset of Markdown, so that one user's te
 
 The following is **not** rendered: raw HTML is shown as literal text, images are replaced by their alternative text, and embedded content, forms, scripts and styles are not supported.
 
-This restriction applies to how comments are displayed in the administrator interface, in the comment panel and in the preview. The text itself is stored and delivered exactly as typed: the audit log and notification payloads carry the Markdown source, and it is up to the receiving system to display it as plain text.
+This restriction applies to how comments are displayed in the administrator interface, in the comment panel and in the preview. The text itself is stored exactly as typed. The audit log and notification payloads carry the Markdown source, not rendered output, and it is up to the receiving system to display it as plain text.
 
 ## Notifications
 
