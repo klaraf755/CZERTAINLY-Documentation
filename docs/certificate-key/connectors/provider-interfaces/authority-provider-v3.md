@@ -169,7 +169,7 @@ Two aspects of registration are handled entirely by the platform and do not invo
 
 The `/request/attributes`, `/renew/attributes` and `/identify/attributes` endpoints are optional. They are not advertised with a capability flag: a connector offers a schema by serving the endpoint. All three take the same request as the other attribute-list endpoints and return an array of attribute definitions.
 
-- `/request/attributes` lists the request attributes the connector offers for the certificate request identity. The platform combines them with the request attributes of the `RA Profile` according to its merge mode (see [Request Attribute](../../concept-design/core-components/request-attribute.md)).
+- `/request/attributes` lists the request attributes the connector offers for the certificate request identity. The platform combines them with the request attributes of the `RA Profile` according to its [merge mode](../../concept-design/core-components/request-attribute.md#merge-mode).
 - `/renew/attributes` lists the attributes that the administrator interface asks for when a certificate is renewed or rekeyed.
 - `/identify/attributes` lists the attributes asked for when a certificate is identified at the CA, for example when it is uploaded or assigned to an `RA Profile`.
 
