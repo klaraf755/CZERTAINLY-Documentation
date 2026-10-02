@@ -69,7 +69,7 @@ The **Identifier authorization** setting decides what happens to an ordered iden
 
 An order that mixes covered and uncovered identifiers pre-authorizes the covered ones and applies the setting to the others. To stop a profile from accepting any orders, disable new orders instead of using an empty list with **Pre-authorized Only**.
 
-The policy applies to both the ACME endpoints of the `ACME Profile` and the ones of the `RA Profile`.
+The policy applies to both the ACME endpoints of the `ACME Profile` and the ones of the `RA Profile`. The platform refuses to save entries that cannot match anything, such as a malformed name or address, or an `IP` entry that uses `Subdomain` or a wildcard.
 
 ### Operations on `ACME Profile`
 
