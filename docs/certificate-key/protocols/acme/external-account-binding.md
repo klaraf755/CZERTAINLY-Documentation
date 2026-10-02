@@ -127,6 +127,5 @@ Once the account is registered, the client no longer needs the key. The account 
 
 - **Withdraw a key** by disabling its secret. This is reversible: enabling the secret puts the key back into service. Registrations with the key then fail until the secret is enabled.
 - **Delete a secret** that an `ACME Profile` uses is refused, and the message names the profiles. Remove the secret from the profile first.
-- **Rotate a key** by creating a new secret, adding it to the profile next to the old one, giving the new `kid` and key to your clients, then removing the old secret from the profile and deleting it.
 - **Enabling EAB on a profile does not remove existing accounts.** Accounts that registered while EAB was off keep working; only new accounts must bind.
-- **There is no lockout.** Failed bindings are not counted or blocked. The strength of the key is the protection, so treat EAB keys like credentials: hand them out securely, use a separate key for each party, and rotate them.
+- **There is no lockout.** Failed bindings are not counted or blocked. The strength of the key is the protection, so treat EAB keys like credentials: hand them out securely and use a separate key for each party.
