@@ -79,7 +79,7 @@ Where the `Comment` action must be granted depends on the kind of object, in the
 | Secrets                                                         | On the whole resource, and the user must also be a member of the secret's vault profile        |
 | Discoveries, approvals, approval profiles and notification profiles | On the whole resource                                                                     |
 
-Group and owner permissions that apply to certificates, keys and secrets apply to the `Comment` action in the same way as to other actions. See [Roles and Permissions](../architecture/access-control/roles-permissions.md) for how to grant actions.
+Access to an object through a group lets a user read its comments, but posting still requires the `Comment` action. See [Roles and Permissions](../architecture/access-control/roles-permissions.md) for how to grant actions.
 
 :::info
 The `auditor` role never includes the `Comment` action, because it is a read-only role. To let a specific person comment, grant them a separate role that contains the `Comment` action. See [Auditor role](../architecture/access-control/roles-permissions.md#auditor-role).
@@ -126,7 +126,7 @@ Operators can also have comment events delivered through [notification profiles]
 The association can be made globally in [Settings → Events](../../settings/events.md), or for a specific [group](./group.md). A group-scoped association applies to comments on objects that belong to that group, which lets a team subscribe to the comment activity on its own objects.
 
 :::warning
-A notification delivers the comment text as written by the user to every recipient of the profile. Comments are free text and may quote information from the object. Size the recipient list of a profile bound to comment events accordingly, and prefer group-scoped associations over a broad global one.
+A profile that delivers through an external notification provider sends the comment text as written by the user to every recipient of the profile. Comments are free text and may quote information from the object. Size the recipient list of a profile bound to comment events accordingly, and prefer group-scoped associations over a broad global one. Internal notifications carry a summary and the identifiers of the comment, not its text.
 :::
 
 ## Audit
