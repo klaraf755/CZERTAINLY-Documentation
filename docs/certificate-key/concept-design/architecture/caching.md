@@ -141,7 +141,7 @@ In practice this means:
 - User-affecting changes (disabling a user, changing role permissions, revoking a user's certificate association) become effective platform-wide **within the time-to-live window** — not instantly.
 - Credentials revoked **outside** of `Core` are not signalled to the cache. This includes JWTs revoked at the identity provider and client certificates revoked at the issuing CA but not yet reflected in `Core`'s own certificate state. The cached authentication outcome remains valid for that credential until its time-to-live elapses.
 - A role change clears the entire authentication cache on the processing instance, so every cached identity there re-authenticates on its next request — briefly raising load on the authentication service. It also clears the authorization cache there, so the next checks go to OPA until the cache warms up again.
-- A change to the authorization policies themselves, and any change affecting an anonymous caller, is not signalled to the authorization cache. Cached decisions remain valid on every instance until their time-to-live elapses.
+- A redeployment of the authorization policies is not signalled to the authorization cache. Cached decisions remain valid on every instance until their time-to-live elapses.
 
 ## Operational considerations
 
@@ -151,6 +151,6 @@ Entries also do not survive a restart — caches start empty and warm up as requ
 
 ## Resetting a cache
 
-In normal operation a cache never needs to be reset by hand. Entries are removed automatically whenever the underlying data changes — a single key is evicted when its object changes, and the whole authentication and authorization caches are cleared when a role changes — and any entry that is not invalidated expires on its own once its time-to-live elapses (five minutes by default).
+In normal operation a cache never needs to be reset by hand. Entries are removed automatically whenever the underlying data changes — a single key is evicted when its object changes, and both the authentication and the authorization cache are cleared in full when a role changes — and any entry that is not invalidated expires on its own once its time-to-live elapses (five minutes by default).
 
 There is currently **no runtime endpoint to flush a cache**: at present the management interface exposes only health and info, so caches cannot be cleared through an API call today. When a full reset is genuinely required — for example after a direct database change that bypasses `Core` — the supported way to discard all cached state is to **restart the `Core` instance**. Because caches are in-memory and per-instance, they start empty on boot and warm up again as requests arrive; in a high-availability deployment each instance must be restarted to clear its own copy.
