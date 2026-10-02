@@ -32,7 +32,7 @@ Comments are organized in threads that are one level deep:
 - A comment written directly on an object opens a **thread**. This first comment is the **thread root**.
 - A **reply** is a comment written under a thread root. A reply to a reply is not possible.
 
-Both threads and replies are listed in pages. The administrator interface shows the newest comments first, for threads and for replies alike, and remembers the direction you choose in your browser. The [Comments API](/api/core-comment) lists oldest first unless a sort direction is requested.
+Both threads and replies are listed in pages. The administrator interface shows the newest comments first, for threads and for replies alike, and remembers the direction you choose in your browser. The Comments API lists oldest first unless a sort direction is requested.
 
 A comment records its author and the time it was written. Comments cannot be edited. To correct a comment, delete it and write a new one.
 
