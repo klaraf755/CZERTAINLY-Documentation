@@ -32,7 +32,7 @@ Comments are organized in threads that are one level deep:
 - A comment written directly on an object opens a **thread**. This first comment is the **thread root**.
 - A **reply** is a comment written under a thread root. A reply to a reply is not possible.
 
-Both threads and replies are listed in pages. The administrator interface shows the newest comments first, for threads and for replies alike, and remembers the direction you choose in your browser. The [API](https://api.otilm.com/) lists oldest first unless a sort direction is requested.
+Both threads and replies are listed in pages. The administrator interface shows the newest comments first, for threads and for replies alike, and remembers the direction you choose in your browser. The [Comments API](/api/core-comment) lists oldest first unless a sort direction is requested.
 
 A comment records its author and the time it was written. Comments cannot be edited. To correct a comment, delete it and write a new one.
 
@@ -102,7 +102,7 @@ Comments are displayed in a restricted subset of Markdown, so that one user's te
 
 The following is **not** rendered: raw HTML is shown as literal text, images are replaced by their alternative text, and embedded content, forms, scripts and styles are not supported.
 
-The same rule applies wherever the text of a comment is shown, including the audit log and notifications.
+This restriction applies to how comments are displayed in the administrator interface, in the comment panel and in the preview. The text itself is stored and delivered exactly as typed: the audit log and notification payloads carry the Markdown source, and it is up to the receiving system to display it as plain text.
 
 ## Notifications
 
@@ -131,4 +131,4 @@ A notification delivers the comment text as written by the user to every recipie
 
 ## Audit
 
-Every operation on comments is written to the [audit log](../../logging/audit-logs.md) under the resource `Comment`: listing, creating, resolving, reopening and deleting. The record names the object the comment belongs to and contains the text of the comment. For a deletion, it contains the text of every comment destroyed, including replies deleted together with their thread.
+Every operation on comments is written to the [audit log](../../logging/audit-logs.md) under the resource `Comment`: listing, creating, resolving, reopening and deleting. Each record names the object the comment belongs to. Creating, resolving, reopening and deleting also record the text of the comment; listing records do not. For a deletion, the record contains the text of every comment destroyed, including replies deleted together with their thread.
