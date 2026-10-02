@@ -86,10 +86,6 @@ When the successor is issued, its relation to the source changes from **Pending*
 
 Complete the successor with an identity that is the same as the source, otherwise the relation ends as a replacement.
 
-:::warning[Known limitation: EJBCA]
-On an EJBCA certification authority that enforces unique subject DNs, a successor registered this way cannot be completed. The completion issues the certificate for a new end entity with the subject DN of the source, which the CA refuses. A regular renewal reuses the end entity of the source and works.
-:::
-
 ## Register a certificate using the API
 
 Pre-register a certificate using the `Client Operations` API. Provide the identity via `csrAttributes` OR the flat `subjectDn`/`subjectAltName`/`extensions` fields — never both. The challenge is optional: add `authorizationSecret` to gate completion, and — only alongside a challenge — the completion deadline as `expiresAt` (the platform rejects `expiresAt` without a challenge). A registration created without a challenge has no authorization gating and no issuance window.
