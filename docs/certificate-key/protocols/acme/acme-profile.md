@@ -71,12 +71,6 @@ An order that mixes covered and uncovered identifiers pre-authorizes the covered
 
 The policy applies to both the ACME endpoints of the `ACME Profile` and the ones of the `RA Profile`.
 
-### Saving the list
-
-The platform refuses to save a list that cannot work: **Pre-authorized Only** without any entry, and entries that could never match, such as a value that is not a valid name or address, or an `IP` entry that uses `Subdomain` or a wildcard. When you edit an `ACME Profile` through the API, omitting the list keeps the current entries and sending an empty list removes them.
-
-Changing the list is an update of the `ACME Profile`, so it is controlled by the same permissions and recorded in the audit log in the same way.
-
 ### Operations on `ACME Profile`
 
 The following operations can be performed on the `ACME Profile`:
