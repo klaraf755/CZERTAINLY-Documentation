@@ -59,10 +59,6 @@ To register a secret you need:
 
 The platform itself reads the secret each time an account is registered, so the person who registers it must be able to read it.
 
-:::note[Editing the list]
-When you edit an `ACME Profile` through the API, omitting `eabSecretUuids` keeps the secrets as they are, and sending an empty list removes all of them, which turns the requirement off. A list you send replaces the current one.
-:::
-
 ## Set up an ACME client
 
 The client registers its account against the directory of the `ACME Profile` and presents:
