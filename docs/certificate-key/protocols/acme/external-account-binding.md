@@ -65,51 +65,18 @@ When you edit an `ACME Profile` through the API, omitting `eabSecretUuids` keeps
 
 ## Set up an ACME client
 
-The client needs the `kid` and the key, and registers its account against the directory of the `ACME Profile`. The examples use the RA profile based directory; replace it with the URL of your ACME server.
+The client registers its account against the directory of the `ACME Profile` and presents:
 
-```mdx-code-block
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
+- the **`kid`**, which is the UUID of the secret, and
+- the **key**, which is the content of the secret, as generated (base64url).
 
-<Tabs>
-<TabItem value="certbot" label="Certbot">
-```
+The algorithm is `HS256`, the only one the platform accepts. How to pass these depends on the client; see the section on External Account Binding in the guide of your client:
 
-```bash
-certbot register \
-  --server https://[domain]:[port]/api/v1/protocols/acme/raProfile/ilm/directory \
-  --eab-kid [kid] \
-  --eab-hmac-key [key]
-```
-
-```mdx-code-block
-</TabItem>
-<TabItem value="acmesh" label="acme.sh">
-```
-
-```bash
-acme.sh --register-account \
-  --server https://[domain]:[port]/api/v1/protocols/acme/raProfile/ilm/directory \
-  --eab-kid [kid] \
-  --eab-hmac-key [key]
-```
-
-```mdx-code-block
-</TabItem>
-<TabItem value="lego" label="lego">
-```
-
-```bash
-lego --server https://[domain]:[port]/api/v1/protocols/acme/raProfile/ilm/directory \
-  --email [contact] --accept-tos \
-  --eab --kid [kid] --hmac [key] \
-  --domains www.example.com run
-```
-
-```mdx-code-block
-</TabItem>
-</Tabs>
-```
+- [Certbot](certbot.md#external-account-binding)
+- [IIS win-acme](win-acme.md#external-account-binding)
+- [Kubernetes cert-manager](cert-manager.md#external-account-binding)
+- [Terraform acme provider](terraform.md#external-account-binding)
+- [Ansible acme module](ansible-acme.md#external-account-binding)
 
 Once the account is registered, the client no longer needs the key. The account is bound to the key of the client, not to the External Account Binding key.
 

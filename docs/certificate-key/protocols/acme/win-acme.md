@@ -41,6 +41,17 @@ For more information follow [win-acme settings](https://www.win-acme.com/referen
 `win-acme` supports various sources plugins for binding (`IIS`, `Exchange` etc.) and validation plugins to prove the identity (HTTP, WebDAV, DNS etc.). For details how to use them, please visit: [win-acme source plugins](https://www.win-acme.com/reference/plugins/source/) and [win-acme validation plugins](https://www.win-acme.com/reference/plugins/validation/).
 :::
 
+## External Account Binding
+
+Pass the `kid` and the key to `win-acme` with the following arguments, see [Set up an ACME client](external-account-binding.md#set-up-an-acme-client). `win-acme` registers the account when it first connects to the server:
+
+```powershell
+wacs.exe `
+  --eab-key-identifier [kid] `
+  --eab-key [key] `
+  --eab-algorithm HS256
+```
+
 ## Using `win-acme` with `IIS` and self-hosted HTTP challenge
 
 Once each pre-requisite and configuration are set up, you can run `win-acme` executable file *`wascs.exe`* with administrator privileges (to enable automatic detection of `IIS` services) and follow these steps:
