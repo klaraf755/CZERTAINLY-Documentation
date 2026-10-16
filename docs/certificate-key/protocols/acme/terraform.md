@@ -86,8 +86,8 @@ resource "acme_registration" "reg" {
   email_address   = "terraform@example.com"
 
   external_account_binding {
-    key_id         = "[kid]"
-    hmac_base64url = var.eab_key
+    key_id      = "[kid]"
+    hmac_base64 = var.eab_key
   }
 }
 ```

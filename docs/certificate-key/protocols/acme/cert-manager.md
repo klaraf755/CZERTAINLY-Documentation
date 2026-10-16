@@ -93,7 +93,6 @@ spec:
       keySecretRef:
         name: eab-secret
         key: secret
-      keyAlgorithm: HS256
 ```
 
 Add the `externalAccountBinding` block to the `ClusterIssuer` manifest above before you apply it.

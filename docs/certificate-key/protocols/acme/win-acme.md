@@ -43,13 +43,12 @@ For more information follow [win-acme settings](https://www.win-acme.com/referen
 
 ## External Account Binding
 
-Pass the `kid` and the key to `win-acme` with the following arguments, see [Set up an ACME client](external-account-binding.md#set-up-an-acme-client). `win-acme` registers the account when it first connects to the server:
+Pass the `kid` and the key to `win-acme` with the following arguments. For the `kid` and the key, see [Set up an ACME client](external-account-binding.md#set-up-an-acme-client):
 
 ```powershell
 wacs.exe `
   --eab-key-identifier [kid] `
-  --eab-key [key] `
-  --eab-algorithm HS256
+  --eab-key [key]
 ```
 
 ## Using `win-acme` with `IIS` and self-hosted HTTP challenge
