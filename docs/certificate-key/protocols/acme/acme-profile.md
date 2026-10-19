@@ -22,8 +22,7 @@ sidebar_position: 3
 | **Require Contacts for new Accounts**               | Specifies whether the contacts are required for registering a new account          | `false`              | <span class="badge badge--danger">No</span>   |
 | **Require agree to Terms of Service**               | Specifies whether the Terms of Service must be agreed for new account registration | `false`              | <span class="badge badge--danger">No</span>   |
 | **External Account Binding secrets**                | Secrets holding the keys that new accounts must bind with. See [External Account Binding](external-account-binding.md) | none (anyone may register) | <span class="badge badge--danger">No</span>   |
-| **Pre-authorized identifiers**                      | Identifiers that accounts may obtain without proving control of them. See [Pre-authorized identifiers](#pre-authorized-identifiers) | none                 | <span class="badge badge--danger">No</span>   |
-| **Identifier authorization**                        | What happens to an identifier that the pre-authorized identifiers do not cover      | `Pre-authorized or Challenge` | <span class="badge badge--danger">No</span>   |
+| **Pre-authorized identifiers**                      | Identifiers that accounts may obtain without proving control of them, and whether an identifier the list does not cover needs a challenge (the default) or is refused. See [Pre-authorized identifiers](#pre-authorized-identifiers) | none                 | <span class="badge badge--danger">No</span>   |
 
 By default `ACME Profiles` will be created without any default `RA Profile`, if not selected any.
 
@@ -35,25 +34,25 @@ Pre-authorization is a decision of the operator that a certain set of identifier
 
 ### Entries
 
-Each entry of the list states the type of the identifier, its value and how it is matched. The properties and the supported identifier types are described in the [Core ACME API](/api/core-acme#tag/acme-profile-management/POST/v1/acmeProfiles). An entry covers identifiers of its own type and no other.
+Each entry has a **Type**, an **Identifier**, a **Match** (`Exact` or `Subdomain`) and a **Wildcard** allowance. The identifier types, and the match types each of them supports, are described in the [Core ACME API](/api/core-acme#tag/acme-profile-management/POST/v1/acmeProfiles). An entry covers identifiers of its own type and no other.
 
-An entry is an identifier, never a pattern. A value with `*` does not match anything and is refused.
+An entry is an identifier, never a pattern. An entry that could never match anything is refused when the profile is saved, for example a malformed value, a value with `*`, or a match type or wildcard allowance that its identifier type does not support.
 
 ### Matching
 
 - `Exact` covers that identifier only. `Subdomain` covers the identifiers below the value at any depth, but not the value itself, so covering both takes two entries.
-- A wildcard identifier is covered only when its entry allows it and the entry covers everything the wildcard stands for, which means a `Subdomain` entry whose value is the parent of the wildcard or an identifier above it.
+- A wildcard identifier is covered only by an entry with the **Wildcard** allowance that covers everything the wildcard stands for, which means a `Subdomain` entry whose value is the parent of the wildcard or an identifier above it.
 
 ### Identifiers that are not covered
 
-The **Identifier authorization** setting decides what happens to an ordered identifier that no entry covers:
+The profile decides what happens to an ordered identifier that no entry covers (`identifierAuthorizationMode` in the API):
 
-- **Pre-authorized or Challenge** (default) — the identifier goes through the usual `http-01` and `dns-01` validation. A profile with an empty list therefore behaves as it did before.
-- **Pre-authorized Only** — the order is refused with the ACME error `rejectedIdentifier`.
+- **Pre-authorized or Challenge** (default) — the identifier goes through the usual challenge validation. A profile with an empty list therefore validates every identifier with a challenge.
+- **Pre-authorized Only** — the order is refused with the ACME error `rejectedIdentifier`. This mode needs at least one entry. To stop a profile from accepting orders, disable new orders instead.
 
-An order that mixes covered and uncovered identifiers pre-authorizes the covered ones and applies the setting to the others.
+An order that mixes covered and uncovered identifiers pre-authorizes the covered ones and applies the mode to the others.
 
-### Operations on `ACME Profile`
+## Operations on `ACME Profile`
 
 The following operations can be performed on the `ACME Profile`:
 

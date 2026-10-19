@@ -13,11 +13,8 @@ EAB decides who may register an account. It does not decide which identifiers ne
 ## How it works
 
 - An `ACME Profile` has a list of **External Account Binding secrets**. Each is a [`Secret`](../../concept-design/core-components/secret.md) that holds one HMAC key.
-- The **UUID of the secret is the `kid`**, and the **content of the secret is the key**.
-- When the list is not empty, External Account Binding is mandatory: the ACME directory advertises `externalAccountRequired`, and a new account must bind with one of the keys. When the list is empty, anyone can register an account.
-- The platform accepts only the `HS256` algorithm.
-
-The platform never stores a generated key outside the secret you create for it, and the key is shown once.
+- When the list is not empty, External Account Binding is mandatory: a new account must bind with one of the keys. When the list is empty, anyone can register an account.
+- The binding is checked only when an account is created.
 
 ## Create a key
 
@@ -46,8 +43,6 @@ In the administrator interface, the **Generate key** button of the `ACME Profile
 
 Store the key as a `Secret` of the type **Secret Key** or **Generic**, with the key as its content. Other secret types, such as `API Key`, cannot be used. The secret must be enabled.
 
-The UUID of the secret is the `kid` that the client presents.
-
 ## Register the secret on the ACME Profile
 
 Add the secret to the **External Account Binding secrets** of the `ACME Profile`, in the profile form or with the `eabSecretUuids` property of the API. You can register more than one secret, for example one per team or one per client.
@@ -74,7 +69,7 @@ The algorithm is `HS256`, the only one the platform accepts. How to pass these d
 - [Terraform acme provider](terraform.md#external-account-binding)
 - [Ansible acme module](ansible-acme.md#external-account-binding)
 
-Once the account is registered, the client no longer needs the key. The account is bound to the key of the client, not to the External Account Binding key.
+Once its account is registered, the client no longer needs the key.
 
 ## What a client sees
 
@@ -82,13 +77,13 @@ Once the account is registered, the client no longer needs the key. The account 
 |---------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------|
 | The directory                                                                               | `meta.externalAccountRequired` is `true` when the profile has at least one secret                         |
 | The client registers without a binding                                                      | `400`, `externalAccountRequired`                                                                          |
-| The binding is invalid: unknown `kid`, wrong key, wrong algorithm or wrong URL              | `401`, `unauthorized`, with the same message for every cause, so `kid` values cannot be probed           |
+| The binding is invalid: unknown `kid`, wrong key, wrong algorithm or wrong URL              | `401`, `unauthorized`, with the same message for every cause                                             |
 | The `kid` is registered on the profile, but its secret is disabled or cannot be read        | `500`, `serverInternal`. Look in the platform log: the cause is not shown to the client                  |
-| The client already has an account                                                           | The account is returned as before. The binding is checked only when an account is created                |
+| The client already has an account                                                           | The existing account is returned                                                                         |
 
 ## Operation
 
-- **Withdraw a key** by disabling its secret. This is reversible: enabling the secret puts the key back into service. Registrations with the key then fail until the secret is enabled.
-- **Delete a secret** that an `ACME Profile` uses is refused, and the message names the profiles. Remove the secret from the profile first.
-- **Enabling EAB on a profile does not remove existing accounts.** Accounts that registered while EAB was off keep working; only new accounts must bind.
+- **Withdraw a key** by removing its secret from the profile, or temporarily by disabling the secret. New accounts can then no longer register with the key. Removing the last secret turns External Account Binding off.
+- **Existing accounts are not affected.** Accounts that registered with a withdrawn key keep working, and so do accounts that registered before External Account Binding was turned on. To cut a client off, revoke its [ACME accounts](acme-account.md).
+- **A secret that an `ACME Profile` uses cannot be deleted**, and the message names the profiles. Remove the secret from the profile first.
 - **There is no lockout.** Failed bindings are not counted or blocked. The strength of the key is the protection, so treat EAB keys like credentials: hand them out securely and use a separate key for each party.
