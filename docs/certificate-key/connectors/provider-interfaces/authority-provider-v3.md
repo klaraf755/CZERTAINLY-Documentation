@@ -72,9 +72,19 @@ All v3 certificate operations are `POST` requests under `/v3/authorityProvider/c
 | Status | `/issue/status`, `/revoke/status`, `/register/status` | Poll a parked operation. |
 | Cancel | `/issue/cancel`, `/revoke/cancel`, `/register/cancel` | Cancel an in-flight operation. |
 
-Renew and rekey do not have their own status or cancel endpoints — they reuse the `issue` ones. Their attributes are listed by `/renew/attributes`; a rekey uses the same schema as a renewal.
+Renew and rekey do not have their own status or cancel endpoints — they reuse the `issue` ones.
 
 Unlike v2, v3 has **no connector-side attribute validation** round-trip. The platform validates request attributes structurally against the schema returned by the `…/attributes` endpoints; the connector is not asked to re-validate.
+
+### Optional attribute schemas
+
+The `/request/attributes`, `/renew/attributes` and `/identify/attributes` endpoints are optional. They are not advertised with a capability flag: a connector offers a schema by serving the endpoint. They take the same request as the other attribute-list endpoints and return an array of attribute definitions.
+
+- `/request/attributes` lists the request attributes the connector offers for the certificate request identity. The platform combines them with the request attributes of the `RA Profile` according to its [merge mode](../../concept-design/core-components/request-attribute.md#merge-mode), which also describes what applies when the connector offers none.
+- `/renew/attributes` lists the attributes asked for when a certificate is renewed or rekeyed.
+- `/identify/attributes` lists the attributes asked for when a certificate is identified at the CA, for example when it is uploaded or assigned to an `RA Profile`.
+
+A connector that does not offer a schema answers `404`, `501` with the error `OPERATION_NOT_SUPPORTED`, or an empty array, and the platform treats each of them as "no schema". Any other error fails the operation. Without a renew or identify schema, the operation takes no attributes: no attribute form is shown, and attribute values supplied for the operation are rejected.
 
 ## Synchronous and asynchronous operations
 
@@ -165,23 +175,13 @@ Two aspects of registration are handled entirely by the platform and do not invo
 - **Platform-level pre-registration** — when an authority does not advertise `certificateRegistration`, the platform registers the identity itself, with no `/register` call.
 - **Authorization secret (challenge)** — an operator may protect a registration with a secret that must be presented again to complete the issuance. It is a control between the operator and the platform; no connector request or response carries it.
 
-### Optional attribute schemas
-
-The `/request/attributes`, `/renew/attributes` and `/identify/attributes` endpoints are optional. They are not advertised with a capability flag: a connector offers a schema by serving the endpoint. All three take the same request as the other attribute-list endpoints and return an array of attribute definitions.
-
-- `/request/attributes` lists the request attributes the connector offers for the certificate request identity. The platform combines them with the request attributes of the `RA Profile` according to its [merge mode](../../concept-design/core-components/request-attribute.md#merge-mode).
-- `/renew/attributes` lists the attributes that the administrator interface asks for when a certificate is renewed or rekeyed.
-- `/identify/attributes` lists the attributes asked for when a certificate is identified at the CA, for example when it is uploaded or assigned to an `RA Profile`.
-
-A connector that does not offer a schema answers `404`, `501` with the error `OPERATION_NOT_SUPPORTED`, or an empty array. The platform treats each of them as "no schema": the form is not shown and the operation behaves as it did without the endpoint. Any other error is not treated as "no schema" and fails the operation. When the schema is empty, the platform rejects attribute values supplied for that operation.
-
 Both, along with the certificate states through registration and completion, are described on the [Certificate state](../../concept-design/core-components/certificate.md#registration-lifecycle) page.
 
 ## For connector developers
 
 A v3 connector reconstructs the CA session from `authorityAttributes` + `raProfileAttributes` on every call. The **base contract** it must implement is the attribute-list endpoints (`/issue/attributes`, `/revoke/attributes`), `issue`, `renew`, `revoke`, `identify`, and the authority-level `listAuthorityAttributes`, `checkAuthorityConnection`, `listRaProfileAttributes`, `getCrl`, `getCaCertificates`.
 
-**Optional by endpoint** — `/request/attributes`, `/renew/attributes` and `/identify/attributes`. No flag is needed: the platform calls them and treats a missing endpoint as an empty schema. See [Optional attribute schemas](#optional-attribute-schemas).
+**Optional by endpoint** — `/request/attributes`, `/renew/attributes` and `/identify/attributes`; see [Optional attribute schemas](#optional-attribute-schemas).
 
 **Optional, capability-advertised** behavior (only used when the corresponding flag is advertised):
 
